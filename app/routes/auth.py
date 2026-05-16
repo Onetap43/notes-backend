@@ -5,7 +5,7 @@ from jose import jwt, JWTError
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.database import get_database
 from app.models import User
-from app.schemas import SignupData, LoginData, TokenResponse
+from app.schemas import signupdata, logindata, TokenResponse
 router=APIRouter()
 password_hasher=CryptContext(schemes=["bcrypt"],deprecated="auto")
 security=HTTPBearer()
@@ -19,7 +19,7 @@ def create_access_token(user_id:int):
     token_payload={"user_id":user_id}
     access_token=jwt.encode(token_payload,SECRET_KEY,algorithm=ALGORITHM)
     return access_token
-def get_current_user(credentials:HTTPAuthorizationCredentials=Depends(security),database:Session=Depends(get_database)):
+def get_current_user(credentials:HTTPAuthorizationCredentials=Depends(security),database:session=Depends(get_database)):
     token=credentials.credentials
     try:
         decoded_payload=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
@@ -33,7 +33,7 @@ def get_current_user(credentials:HTTPAuthorizationCredentials=Depends(security),
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="USER NOT FOUND")
     return current_user
 @router.post("/signup")
-def signup(signup_data:SignupData,database:Session=depends(get_database)):
+def signup(signup_data:signupdata,database:session=Depends(get_database)):
     existing_user=database.query(User).filter(User.username==signup_data.username).first()
     if existing_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="username already exists")
@@ -48,7 +48,7 @@ def signup(signup_data:SignupData,database:Session=depends(get_database)):
     return{"message":"signup successful", "user_id":new_user.user_id,
            "username":new_user.username}
 @router.post("/login",response_model=TokenResponse)
-def login(login_data:LoginData,database:database_Session=Depends(get_database)):
+def login(login_data:logindata,database_Session:session=Depends(get_database)):
     user=database_Session.query(User).filter((User.username)==login_data.username).first()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="invalid username or password")
@@ -56,5 +56,5 @@ def login(login_data:LoginData,database:database_Session=Depends(get_database)):
     if  not password_is_correct:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid username or password")
     access_token=create_access_token(user.user_id)
-    return {"acess token":access_token, "token_type:"bearer"}
+    return{"access_token":access_token,"token_type":"bearer"}
 
