@@ -17,3 +17,7 @@ def create_note(note_data:NoteCreate,current_user:User=Depends(get_current_user)
 def get_my_notes(current_user:User=Depends(get_current_user),database_session:Session=Depends(get_database)):
     my_notes=database_session.query(Notes).filter(Notes.user_id==current_user.user_id).all()
     return my_notes
+@router.get("/notes/{note_id}")
+def get_specific_note(note_id:int,database_session:Session=Depends(get_database),current_user:User=Depends(get_current_user)):
+    note=database_session.query(Notes).filter(Notes.user_id==current_user.user_id,Note.note_id==note_id).first()
+    return note
