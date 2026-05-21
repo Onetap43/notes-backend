@@ -1,5 +1,6 @@
 from fastapi import APIRouter,Depends,HTTPException,status
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from app.database import get_database
 from app.models import Notes,User
 from app.schemas import NoteCreate,NoteUpdate
@@ -14,10 +15,14 @@ def create_note(note_data:NoteCreate,current_user:User=Depends(get_current_user)
     database_session.refresh(new_note)
     return{"message":"Note Created Successfully","note_id": new_note.note_id,"title":new_note.title,"content":new_note.content}
 @router.get("/notes")
-def get_my_notes(page:int=1,limit:int=5,current_user:User=Depends(get_current_user),database_session:Session=Depends(get_database)):
+def get_my_notes(search:str | None=None,page:int=1,limit:int=5,current_user:User=Depends(get_current_user),database_session:Session=Depends(get_database)):
     skip=(page-1)*limit
-    my_notes=database_session.query(Notes).filter(Notes.user_id==current_user.user_id).offset(skip).limit(limit).all()
-    return my_notes
+    query=database_session.query(Notes).filter(Notes.user_id==current_user.user_id)
+    if search:
+        query=query.filter(or_(Notes.title.contains(search),Notes.content.contains(search)))
+    query=query.order_by(Notes.note_id.desc())
+    notes=query.offset(skip).limit(limit).all()
+    return notes
 @router.get("/notes/{note_id}")
 def get_specific_note(note_id:int,database_session:Session=Depends(get_database),current_user:User=Depends(get_current_user)):
     note=database_session.query(Notes).filter(Notes.user_id==current_user.user_id,Notes.note_id==note_id).first()
