@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey,Boolean
+from sqlalchemy import Column, Integer, String, ForeignKey,Boolean,DateTime
+from datetime import datetime,timezone
 from app.database import DatabaseBase
 class User(DatabaseBase):
     __tablename__="users"
@@ -13,4 +14,5 @@ class Notes(DatabaseBase):
     title= Column(String, nullable=False)
     content=Column(String, nullable=False)
     archived=Column(Boolean,default=False)
-
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
