@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from app.limiter import limiter
 from sqlalchemy.orm import session
 from passlib.context import CryptContext
 from jose import jwt, JWTError
@@ -48,7 +49,8 @@ def signup(signup_data:signupdata,database:session=Depends(get_database)):
     return{"message":"signup successful", "user_id":new_user.user_id,
            "username":new_user.username}
 @router.post("/login",response_model=TokenResponse)
-def login(login_data:logindata,database_Session:session=Depends(get_database)):
+@limiter.limit("5/minute")
+def login(request:Request,login_data:logindata,database_Session:session=Depends(get_database)):
     user=database_Session.query(User).filter((User.username)==login_data.username).first()
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="invalid username or password")
@@ -57,4 +59,8 @@ def login(login_data:logindata,database_Session:session=Depends(get_database)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid username or password")
     access_token=create_access_token(user.user_id)
     return{"access_token":access_token,"token_type":"bearer"}
+@router.get("/me")
+def get_my_profile(current_user:User=Depends(get_current_user)):
+    return{"user_id":current_user.user_id,"username":current_user.username}
+
 
