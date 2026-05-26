@@ -7,11 +7,14 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.database import get_database
 from app.models import User
 from app.schemas import signupdata, logindata, TokenResponse
+import os
+from dotenv import load_dotenv
+load_dotenv()
 router=APIRouter()
 password_hasher=CryptContext(schemes=["bcrypt"],deprecated="auto")
 security=HTTPBearer()
-SECRET_KEY="finlanduae2026"
-ALGORITHM="HS256"
+SECRET_KEY=os.getenv("SECRET_KEY")
+ALGORITHM=os.getenv("ALGORITHM")
 def hash_password(plain_password:str):
     return password_hasher.hash(plain_password)
 def verify_password(plain_password:str,hashed_password:str):
