@@ -9,10 +9,10 @@ class User(DatabaseBase):
 class Notes(DatabaseBase):
     __tablename__="notes"
     note_id=Column(Integer, primary_key=True, index=True)
-    pinned=Column(Boolean,default=False)
+    pinned=Column(Boolean,default=False,index=True)
     user_id=Column(Integer, ForeignKey("users.user_id"), nullable=False, index=True)
     title= Column(String, nullable=False)
     content=Column(String, nullable=False)
-    archived=Column(Boolean,default=False)
+    archived=Column(Boolean,default=False,index=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc),index=True)
