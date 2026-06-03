@@ -9,6 +9,7 @@ from app.models import User
 from app.schemas import signupdata, logindata, TokenResponse
 import os
 from dotenv import load_dotenv
+from app.logger import logger
 load_dotenv()
 router=APIRouter()
 password_hasher=CryptContext(schemes=["bcrypt"],deprecated="auto")
@@ -38,8 +39,10 @@ def get_current_user(credentials:HTTPAuthorizationCredentials=Depends(security),
     return current_user
 @router.post("/signup")
 def signup(signup_data:signupdata,database:session=Depends(get_database)):
+    logger.info("signup route hit")
     existing_user=database.query(User).filter(User.username==signup_data.username).first()
     if existing_user:
+        logger.warning(f"Signup failed: username already exists- {signup_data.username}")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="username already exists")
     #password hash karne ka function call kiya
     hashed_password=hash_password(signup_data.password)
@@ -49,6 +52,7 @@ def signup(signup_data:signupdata,database:session=Depends(get_database)):
     database.commit()
     # now database will make automatic user_id so get that user_id in new_user
     database.refresh(new_user)
+    logger.info(f"New user created:{new_user.username}")
     return{"message":"signup successful", "user_id":new_user.user_id,
            "username":new_user.username}
 @router.post("/login",response_model=TokenResponse)
@@ -56,11 +60,14 @@ def signup(signup_data:signupdata,database:session=Depends(get_database)):
 def login(request:Request,login_data:logindata,database_Session:session=Depends(get_database)):
     user=database_Session.query(User).filter((User.username)==login_data.username).first()
     if user is None:
+        logger.warning(f"Login failed:user not found - {login_data.username}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="invalid username or password")
     password_is_correct=verify_password(login_data.password,user.password)
     if  not password_is_correct:
+        logger.warning(f"Login failed:wrong password - {login_data.username}")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid username or password")
     access_token=create_access_token(user.user_id)
+    logger.info(f"user logged in:{user.username}")
     return{"access_token":access_token,"token_type":"bearer"}
 @router.get("/me")
 def get_my_profile(current_user:User=Depends(get_current_user)):
