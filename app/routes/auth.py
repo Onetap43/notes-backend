@@ -16,6 +16,8 @@ password_hasher=CryptContext(schemes=["bcrypt"],deprecated="auto")
 security=HTTPBearer()
 SECRET_KEY=os.getenv("SECRET_KEY")
 ALGORITHM=os.getenv("ALGORITHM")
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
 def hash_password(plain_password:str):
     return password_hasher.hash(plain_password)
 def verify_password(plain_password:str,hashed_password:str):
@@ -52,7 +54,7 @@ def signup(signup_data:signupdata,database:session=Depends(get_database)):
     database.commit()
     # now database will make automatic user_id so get that user_id in new_user
     database.refresh(new_user)
-    logger.info(f"New user created:{new_user.username}")
+    logger.info(f"New user created",extra={"event":"user_created","username":new_user.username})
     return{"message":"signup successful", "user_id":new_user.user_id,
            "username":new_user.username}
 @router.post("/login",response_model=TokenResponse)
@@ -60,14 +62,32 @@ def signup(signup_data:signupdata,database:session=Depends(get_database)):
 def login(request:Request,login_data:logindata,database_Session:session=Depends(get_database)):
     user=database_Session.query(User).filter((User.username)==login_data.username).first()
     if user is None:
-        logger.warning(f"Login failed:user not found - {login_data.username}")
+        logger.warning(
+    "Login failed: user not found",
+    extra={
+        "event": "login_failed_user_not_found",
+        "username": login_data.username
+    }
+)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="invalid username or password")
     password_is_correct=verify_password(login_data.password,user.password)
     if  not password_is_correct:
-        logger.warning(f"Login failed:wrong password - {login_data.username}")
+        logger.warning(
+    "Login failed: wrong password",
+    extra={
+        "event": "login_failed_wrong_password",
+        "username": login_data.username
+    }
+)
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid username or password")
     access_token=create_access_token(user.user_id)
-    logger.info(f"user logged in:{user.username}")
+    logger.info(
+    "User logged in",
+    extra={
+        "event": "user_login_success",
+        "username": user.username
+    }
+)
     return{"access_token":access_token,"token_type":"bearer"}
 @router.get("/me")
 def get_my_profile(current_user:User=Depends(get_current_user)):
