@@ -17,3 +17,6 @@ async def rate_limit_handler(request:Request,exc:RateLimitExceeded):
 DatabaseBase.metadata.create_all(bind=database_engine)
 app.include_router(auth.router)
 app.include_router(notes.router)
+@app.get("/")
+def home():
+    return{"message":"notes backend API running","docs":"/docs"}
