@@ -67,7 +67,7 @@ def archive(note_id:int,current_user:User=Depends(get_current_user),database_ses
     database_session.commit()
     database_session.refresh(note)
     return{"message":"archive status updated","note_id":note.note_id,"archived":note.archived}
-@router.get("notes/archived")
+@router.get("/archived_notes")
 def get_archived_notes(page:int=1,limit:int=5,current_user:User=Depends(get_current_user),database_session:Session=Depends(get_database)):
     skip=(page-1)*limit
     note=database_session.query(Notes).filter(Notes.user_id==current_user.user_id,Notes.archived==True).order_by(Notes.pinned.desc(),Notes.note_id.desc()).offset(skip).limit(limit).all()
