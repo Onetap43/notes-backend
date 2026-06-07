@@ -72,7 +72,7 @@ def get_archived_notes(page:int=1,limit:int=5,current_user:User=Depends(get_curr
     skip=(page-1)*limit
     note=database_session.query(Notes).filter(Notes.user_id==current_user.user_id,Notes.archived==True).order_by(Notes.pinned.desc(),Notes.note_id.desc()).offset(skip).limit(limit).all()
     return note
-@router.get("recently_updated")
+@router.get("/recently_updated")
 def recently_updated(limit:int=5,current_user:User=Depends(get_current_user),database_session:Session=Depends(get_database)):
     note=database_session.query(Notes).filter(Notes.user_id==current_user.user_id,Notes.archived==False).order_by(Note.updated_at.desc()).limit(limit).all()
     return note
