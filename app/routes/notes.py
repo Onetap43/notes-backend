@@ -5,6 +5,7 @@ from app.database import get_database
 from app.models import Notes,User
 from app.schemas import NoteCreate,NoteUpdate
 from app.routes.auth import get_current_user
+from datetime import datetime,timezone
 router=APIRouter()
 @router.post("/notes")
 def create_note(note_data:NoteCreate,current_user:User=Depends(get_current_user),database_session:Session=Depends(get_database)):
