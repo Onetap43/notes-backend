@@ -1,0 +1,421 @@
+{
+  "info": {
+    "_postman_id": "43172221-a8c4-470c-bf55-86369937bbbb",
+    "name": "My Collection",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55538971",
+    "_collection_link": "https://go.postman.co/collection/55538971-43172221-a8c4-470c-bf55-86369937bbbb?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "notes-backend",
+      "item": [
+        {
+          "name": "signup",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"test123\",\r\n  \"password\": \"test123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/signup",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"test123\",\r\n  \"password\": \"test123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/login",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CREATE NOTE",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"First deployed note\",\r\n  \"content\": \"This note was created from Postman using the deployed API testing.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/notes",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "notes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET NOTES",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/notes",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "notes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Specific Note",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/notes/1",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "notes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE NOTE",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Updated Note\",\r\n  \"content\": \"This note was updated using Postman test.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/update_notes/3",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "update_notes",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE NOTE",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/notes/1",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "notes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PIN",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/notes/2/pin",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "notes",
+                "2",
+                "pin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "ARCHIVE",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/notes/2/archive",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "notes",
+                "2",
+                "archive"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET ARCHIVED NOTES",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/archived_notes",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "archived_notes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RECENTLY_UPDATED",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/recently_updated",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "recently_updated"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET_MY_PROFILE",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.Gvzf1tBYD-Qi1LFSUq0jq4VsEsBQLoZcawRMZhhxrs4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://notes-backend-fhvg.onrender.com/me",
+              "protocol": "https",
+              "host": [
+                "notes-backend-fhvg",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
