@@ -58,7 +58,7 @@ def signup(signup_data:signupdata,database:session=Depends(get_database)):
     return{"message":"signup successful", "user_id":new_user.user_id,
            "username":new_user.username}
 @router.post("/login",response_model=TokenResponse)
-@limiter.limit("5/minute")
+@limiter.limit("2/minute")
 def login(request:Request,login_data:logindata,database_Session:session=Depends(get_database)):
     user=database_Session.query(User).filter((User.username)==login_data.username).first()
     if user is None:
