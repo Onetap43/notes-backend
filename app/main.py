@@ -1,4 +1,5 @@
 from fastapi import FastAPI,Request
+from fastapi.middleware.cors import CORSMiddleware
 from app.database import database_engine, DatabaseBase
 from app.limiter import limiter 
 from app import models 
@@ -8,6 +9,15 @@ from slowapi.middleware import SlowAPIMiddleware
 from fastapi import Request
 from fastapi.responses import JSONResponse
 app= FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.state.limiter=limiter
 app.add_middleware(SlowAPIMiddleware)
 # equest came now this middleware will check the request count and if allowed route will execute
