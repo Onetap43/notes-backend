@@ -8,6 +8,9 @@ function Dashboard() {
   const [user, setUser] = useState(null);
   const [notes, setNotes] = useState([]);
 
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
@@ -44,6 +47,46 @@ function Dashboard() {
     fetchData();
   }, [navigate]);
 
+  const createNote = async () => {
+    const token = localStorage.getItem("access_token");
+
+    if (!title.trim() || !content.trim()) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      await api.post(
+        "/notes",
+        {
+          title: title,
+          content: content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const notesResponse = await api.get("/notes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setNotes(notesResponse.data);
+
+      setTitle("");
+      setContent("");
+
+      alert("Note created successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to create note");
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("access_token");
     navigate("/login");
@@ -65,6 +108,33 @@ function Dashboard() {
 
       <hr />
 
+      <h2>Create Note</h2>
+
+      <input
+        type="text"
+        placeholder="Enter title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+
+      <br />
+      <br />
+
+      <textarea
+        rows="5"
+        cols="40"
+        placeholder="Enter content"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+
+      <br />
+      <br />
+
+      <button onClick={createNote}>Create Note</button>
+
+      <hr />
+
       <h2>My Notes</h2>
 
       {notes.length === 0 ? (
@@ -75,8 +145,8 @@ function Dashboard() {
             key={note.note_id}
             style={{
               border: "1px solid black",
-              marginBottom: "15px",
               padding: "10px",
+              marginBottom: "15px",
             }}
           >
             <h3>{note.title}</h3>
