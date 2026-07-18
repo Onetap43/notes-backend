@@ -11,6 +11,10 @@ function Dashboard() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
+
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
@@ -19,71 +23,90 @@ function Dashboard() {
       return;
     }
 
-    const fetchData = async () => {
-      try {
-        const userResponse = await api.get("/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setUser(userResponse.data);
-
-        const notesResponse = await api.get("/notes", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setNotes(notesResponse.data);
-      } catch (error) {
-        console.error(error);
-
-        localStorage.removeItem("access_token");
-        navigate("/login");
-      }
-    };
-
-    fetchData();
+    fetchUser();
+    fetchNotes();
   }, [navigate]);
 
-  const createNote = async () => {
-    const token = localStorage.getItem("access_token");
+  const fetchUser = async () => {
+    try {
+      const response = await api.get("/me");
+      setUser(response.data);
+    } catch (error) {
+      console.error(error);
+      localStorage.removeItem("access_token");
+      navigate("/login");
+    }
+  };
 
+  const fetchNotes = async () => {
+    try {
+      const response = await api.get("/notes");
+      setNotes(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const createNote = async () => {
     if (!title.trim() || !content.trim()) {
       alert("Please fill all fields");
       return;
     }
 
     try {
-      await api.post(
-        "/notes",
-        {
-          title: title,
-          content: content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const notesResponse = await api.get("/notes", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await api.post("/notes", {
+        title,
+        content,
       });
-
-      setNotes(notesResponse.data);
 
       setTitle("");
       setContent("");
+
+      await fetchNotes();
 
       alert("Note created successfully!");
     } catch (error) {
       console.error(error);
       alert("Failed to create note");
+    }
+  };
+
+  const deleteNote = async (noteId) => {
+    try {
+      await api.delete(`/notes/${noteId}`);
+
+      setNotes(notes.filter((note) => note.note_id !== noteId));
+
+      alert("Note deleted successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete note");
+    }
+  };
+
+  const startEditing = (note) => {
+    setEditingId(note.note_id);
+    setEditTitle(note.title);
+    setEditContent(note.content);
+  };
+
+  const updateNote = async (noteId) => {
+    try {
+      await api.put(`/update_notes/${noteId}`, {
+        title: editTitle,
+        content: editContent,
+      });
+
+      await fetchNotes();
+
+      setEditingId(null);
+      setEditTitle("");
+      setEditContent("");
+
+      alert("Note updated successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update note");
     }
   };
 
@@ -139,23 +162,73 @@ function Dashboard() {
 
       {notes.length === 0 ? (
         <p>No notes found.</p>
-      ) : (
-        notes.map((note) => (
+      ) : (notes.map((note) => (
           <div
             key={note.note_id}
             style={{
               border: "1px solid black",
-              padding: "10px",
+              padding: "15px",
               marginBottom: "15px",
+              borderRadius: "10px",
             }}
           >
-            <h3>{note.title}</h3>
+            {editingId === note.note_id ? (
+              <>
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  style={{
+                    width: "100%",
+                    marginBottom: "10px",
+                  }}
+                />
 
-            <p>{note.content}</p>
+                <textarea
+                  rows="5"
+                  cols="40"
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                  style={{
+                    width: "100%",
+                    marginBottom: "10px",
+                  }}
+                />
+
+                <button
+                  onClick={() => updateNote(note.note_id)}
+                  style={{ marginRight: "10px" }}
+                >
+                  Save
+                </button>
+
+                <button onClick={() => setEditingId(null)}>
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <>
+                <h3>{note.title}</h3>
+
+                <p>{note.content}</p>
+
+                <button
+                  onClick={() => startEditing(note)}
+                  style={{ marginRight: "10px" }}
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => deleteNote(note.note_id)}
+                >
+                  Delete
+                </button>
+              </>
+            )}
           </div>
         ))
-      )}
-    </div>
+      )}</div>
   );
 }
 
