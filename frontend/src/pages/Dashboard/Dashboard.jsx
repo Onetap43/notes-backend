@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
-
 import CreateNote from "../../components/CreateNote";
 import NoteCard from "../../components/NoteCard";
 
@@ -11,6 +10,11 @@ function Dashboard() {
 
   const [user, setUser] = useState(null);
   const [notes, setNotes] = useState([]);
+
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const limit = 5;
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -21,8 +25,11 @@ function Dashboard() {
     }
 
     fetchUser();
-    fetchNotes();
   }, [navigate]);
+
+  useEffect(() => {
+    fetchNotes();
+  }, [page, search]);
 
   const fetchUser = async () => {
     try {
@@ -37,7 +44,14 @@ function Dashboard() {
 
   const fetchNotes = async () => {
     try {
-      const response = await api.get("/notes");
+      const response = await api.get("/notes", {
+        params: {
+          search,
+          page,
+          limit,
+        },
+      });
+
       setNotes(response.data);
     } catch (error) {
       console.error(error);
@@ -65,15 +79,39 @@ function Dashboard() {
         Logout
       </button>
 
-      <button onClick={() => navigate("/archived")}>
+      <button
+        onClick={() => navigate("/archived")}
+        style={{ marginRight: "10px" }}
+      >
         Archived Notes
+      </button>
+
+      <button onClick={() => navigate("/recently-updated")}>
+        Recently Updated
       </button>
 
       <hr />
 
-      <CreateNote onNoteCreated={fetchNotes} />
+      <CreateNote
+        onNoteCreated={fetchNotes}
+      />
 
       <h2>My Notes</h2>
+
+      <input
+        type="text"
+        placeholder="Search notes..."
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setPage(1);
+        }}
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "20px",
+        }}
+      />
 
       {notes.length === 0 ? (
         <p>No notes found.</p>
@@ -86,6 +124,25 @@ function Dashboard() {
           />
         ))
       )}
+
+      <div style={{ marginTop: "25px" }}>
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+        >
+          Previous
+        </button>
+
+        <span style={{ margin: "0 15px" }}>
+          Page {page}
+        </span>
+
+        <button
+          onClick={() => setPage(page + 1)}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }

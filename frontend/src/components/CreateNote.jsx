@@ -20,9 +20,9 @@ function CreateNote({ onNoteCreated }) {
       setTitle("");
       setContent("");
 
-      alert("Note created successfully!");
-
       onNoteCreated();
+
+      alert("Note created successfully!");
     } catch (error) {
       console.error(error);
       alert("Failed to create note");
@@ -30,7 +30,15 @@ function CreateNote({ onNoteCreated }) {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        background: "white",
+        padding: "20px",
+        borderRadius: "10px",
+        marginBottom: "25px",
+        boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+      }}
+    >
       <h2>Create Note</h2>
 
       <input
@@ -38,27 +46,29 @@ function CreateNote({ onNoteCreated }) {
         placeholder="Enter title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "15px",
+        }}
       />
-
-      <br />
-      <br />
 
       <textarea
         rows="5"
-        cols="40"
         placeholder="Enter content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginBottom: "15px",
+          resize: "vertical",
+        }}
       />
-
-      <br />
-      <br />
 
       <button onClick={createNote}>
         Create Note
       </button>
-
-      <hr />
     </div>
   );
 }
