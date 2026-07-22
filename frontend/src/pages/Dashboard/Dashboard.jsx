@@ -27,13 +27,10 @@ function Dashboard() {
   const fetchUser = async () => {
     try {
       const response = await api.get("/me");
-
       setUser(response.data);
     } catch (error) {
       console.error(error);
-
       localStorage.removeItem("access_token");
-
       navigate("/login");
     }
   };
@@ -41,7 +38,6 @@ function Dashboard() {
   const fetchNotes = async () => {
     try {
       const response = await api.get("/notes");
-
       setNotes(response.data);
     } catch (error) {
       console.error(error);
@@ -50,7 +46,6 @@ function Dashboard() {
 
   const logout = () => {
     localStorage.removeItem("access_token");
-
     navigate("/login");
   };
 
@@ -59,36 +54,31 @@ function Dashboard() {
   }
 
   return (
-    <div
-      style={{
-        padding: "40px",
-      }}
-    >
+    <div style={{ padding: "40px" }}>
       <h1>Dashboard</h1>
 
-      <h2>
-        Welcome, {user.username}
-      </h2>
+      <h2>Welcome, {user.username}</h2>
 
-      <p>
-        User ID: {user.user_id}
-      </p>
+      <p>User ID: {user.user_id}</p>
 
-      <button onClick={logout}>
+      <button onClick={logout} style={{ marginRight: "10px" }}>
         Logout
+      </button>
+
+      <button onClick={() => navigate("/archived")}>
+        Archived Notes
       </button>
 
       <hr />
 
-      <CreateNote
-        onNoteCreated={fetchNotes}
-      />
+      <CreateNote onNoteCreated={fetchNotes} />
 
       <h2>My Notes</h2>
 
       {notes.length === 0 ? (
         <p>No notes found.</p>
-      ) : (notes.map((note) => (
+      ) : (
+        notes.map((note) => (
           <NoteCard
             key={note.note_id}
             note={note}
