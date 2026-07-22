@@ -1,10 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
 
-function NoteCard({
-  note,
-  fetchNotes,
-}) {
+function NoteCard({ note, fetchNotes }) {
   const [editing, setEditing] = useState(false);
 
   const [title, setTitle] = useState(note.title);
@@ -13,9 +10,7 @@ function NoteCard({
   const deleteNote = async () => {
     try {
       await api.delete(`/notes/${note.note_id}`);
-
       alert("Note deleted successfully!");
-
       fetchNotes();
     } catch (error) {
       console.error(error);
@@ -31,9 +26,7 @@ function NoteCard({
       });
 
       alert("Note updated successfully!");
-
       setEditing(false);
-
       fetchNotes();
     } catch (error) {
       console.error(error);
@@ -44,7 +37,6 @@ function NoteCard({
   const togglePin = async () => {
     try {
       await api.patch(`/notes/${note.note_id}/pin`);
-
       fetchNotes();
     } catch (error) {
       console.error(error);
@@ -54,7 +46,6 @@ function NoteCard({
   const toggleArchive = async () => {
     try {
       await api.patch(`/notes/${note.note_id}/archive`);
-
       fetchNotes();
     } catch (error) {
       console.error(error);
@@ -65,16 +56,20 @@ function NoteCard({
     return (
       <div
         style={{
-          border: "1px solid black",
-          padding: "15px",
-          marginBottom: "15px",
+          background: "white",
+          padding: "20px",
+          marginBottom: "20px",
+          borderRadius: "10px",
+          boxShadow: "0 2px 10px rgba(0,0,0,.1)",
         }}
-      ><input
+      >
+        <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           style={{
             width: "100%",
+            padding: "10px",
             marginBottom: "10px",
           }}
         />
@@ -85,7 +80,9 @@ function NoteCard({
           onChange={(e) => setContent(e.target.value)}
           style={{
             width: "100%",
-            marginBottom: "10px",
+            padding: "10px",
+            marginBottom: "15px",
+            resize: "vertical",
           }}
         />
 
@@ -96,7 +93,9 @@ function NoteCard({
           Save
         </button>
 
-        <button onClick={() => setEditing(false)}>
+        <button
+          onClick={() => setEditing(false)}
+        >
           Cancel
         </button>
       </div>
@@ -106,10 +105,11 @@ function NoteCard({
   return (
     <div
       style={{
-        border: "1px solid black",
-        padding: "15px",
-        marginBottom: "15px",
+        background: "white",
+        padding: "20px",
+        marginBottom: "20px",
         borderRadius: "10px",
+        boxShadow: "0 2px 10px rgba(0,0,0,.1)",
       }}
     >
       <h3>
