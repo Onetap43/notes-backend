@@ -17,6 +17,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "https://notes-backend-project.vercel.app",
+        "https://notes-backend-project-svl6bte4l-team-pranjal.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -24,7 +25,6 @@ app.add_middleware(
 )
 
 app.state.limiter = limiter
-
 app.add_middleware(SlowAPIMiddleware)
 
 
@@ -32,9 +32,7 @@ app.add_middleware(SlowAPIMiddleware)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
     return JSONResponse(
         status_code=429,
-        content={
-            "message": "Too many requests. Please try again later."
-        },
+        content={"message": "Too many requests. Please try again later."},
     )
 
 
