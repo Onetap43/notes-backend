@@ -1,304 +1,387 @@
-Notes Backend API
+# 📝 Notes App
 
-A production-style backend API built using FastAPI, PostgreSQL, Docker, JWT Authentication, SQLAlchemy, GitHub Actions, and Render Deployment.
+A production-ready full-stack **Notes Management Application** built using **FastAPI**, **React**, and **PostgreSQL**. The application provides secure JWT authentication, complete note management, search, pagination, pinning, archiving, API rate limiting, structured logging, Docker support, and cloud deployment.
 
-The application allows users to securely create, update, delete, pin, archive, and manage personal notes through authenticated REST APIs.
 
-Project Overview
 
-This project was built to learn and apply industry-level backend development practices.
+# 🚀 A Live Demo
 
-The backend includes authentication, database design, Docker containerization, cloud deployment, structured logging, database optimization, API security, and CI workflows.
+### Frontend
 
-Users can manage personal notes while ensuring data isolation through user-specific authentication.
+https://notes-backend-project.vercel.app
 
-
-
-Highlights
-
-- JWT Authentication
-- PostgreSQL Database
-- Dockerized Application
-- GitHub Actions CI
-- Cloud Deployment on Render
-- API Rate Limiting
-- Database Indexing
-- Connection Pooling
-- Structured JSON Logging
-- Swagger Documentation
-- Postman Collection
-
-
-
-Features
-
-Authentication & Security
-
-- User Signup
-- User Login
-- JWT Authentication
-- Password Hashing using bcrypt
-- Protected Routes
-- Environment Variables
-- API Rate Limiting
-
-Notes Management
-
-- Create Note
-- Get All Notes
-- Get Specific Note
-- Update Note
-- Delete Note
-
-Advanced Features
-
-- Pin / Unpin Notes
-- Archive / Unarchive Notes
-- Recently Updated Notes
-- User Profile Endpoint
-
-Performance & Scalability
-
-- PostgreSQL Database
-- SQLAlchemy ORM
-- Database Connection Pooling
-- Database Indexing
-- Structured JSON Logging
-
-DevOps & Deployment
-
-- Dockerized Application
-- Docker Compose Support
-- GitHub Actions CI
-- Cloud Deployment on Render
-- Interactive Swagger Documentation
-- Postman Collection
-
-
-
-Tech Stack
-
-Backend
-
-- Python
-- FastAPI
-
-Database
-
-- PostgreSQL
-- SQLAlchemy
-
-Authentication
-
-- JWT
-- Passlib (bcrypt)
-
-DevOps
-
-- Docker
-- Docker Compose
-- GitHub Actions
-- Render
-
-API Testing
-
-- Swagger UI
-- Postman
-
-
-
-Repository
-
-https://github.com/Onetap43/notes-backend
-
-
-
-API Endpoints
-
-Authentication
-
-Method| Endpoint| Description
-POST| /signup| Create account
-POST| /login| User login
-
-Notes
-
-Method| Endpoint| Description
-POST| /notes| Create note
-GET| /notes| Get all notes
-GET| /notes/{note_id}| Get specific note
-PUT| /update_notes/{note_id}| Update note
-DELETE| /notes/{note_id}| Delete note
-
-Additional Features
-
-Method| Endpoint| Description
-
-PATCH| /notes/{note_id}/pin| Toggle pin
-PATCH| /notes/{note_id}/archive| Archive note
-GET| /archived_notes| Get archived notes
-GET| /recently_updated| Recently updated notes
-GET| /me| Current user profile
-
-
-
-Project Structure
-
-notes-backend/
-│
-├── .github/
-│   └── workflows/
-│
-├── app/
-│   ├── routes/
-│   ├── auth.py
-│   ├── database.py
-│   ├── logger.py
-│   ├── limiter.py
-│   ├── models.py
-│   ├── schemas.py
-│   └── main.py
-│
-├── postman/
-│   └── notes_backend_postman_collection.json
-│
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── README.md
-└── .env
-
-
-
-Local Setup
-
-Clone the repository:
-
-git clone https://github.com/Onetap43/notes-backend.git
-
-Move into project folder:
-
-cd notes-backend
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-Run the server:
-
-uvicorn app.main:app --reload
-
-
-
-Docker Setup
-
-Build and run containers:
-
-docker compose up --build
-
-Run existing containers:
-
-docker compose up
-
----
-
-Live Deployment
-
-Live API
+### Backend API
 
 https://notes-backend-fhvg.onrender.com
 
-Swagger Documentation
+### Swagger Documentation
 
 https://notes-backend-fhvg.onrender.com/docs
 
 
 
-Postman Collection
+# 📌 Project Overview
 
-The complete Postman collection is available in:
+The Notes App allows users to securely create and manage their personal notes.
 
-postman/notes_backend_postman_collection.json
-
-Import the collection directly into Postman to test all API endpoints.
+Each user has their own private notes protected using JWT Authentication. After logging in, users can create, update, delete, search, pin, and archive notes. The backend is built using FastAPI with SQLAlchemy ORM, while the frontend is developed using React and Vite. The complete application is deployed on Render and Vercel.
 
 
 
-CI/CD
+# ✨ Features
 
-This project uses GitHub Actions for Continuous Integration.
+## 🔐 Authentication
 
-On every push to the main branch, the GitHub Actions workflow runs automated checks to verify that dependencies install correctly and important project imports work.
-
-The project is deployed on Render, and Render is connected to the GitHub repository for cloud deployment.
-
-
-
-Logging
-
-Structured JSON logging has been implemented for:
-
-- Authentication events
-- Login attempts
-- Note creation
-- Note updates
-- Note deletion
-- API requests
-
-
-
-Database
-
-PostgreSQL is used as the primary database.
-
-Implemented database features:
-
-- SQLAlchemy ORM
-- Connection Pooling
-- Database Indexing
-- Session Management
-
-
-
-What I Learned
-
-Through this project I gained practical experience with:
-
-- FastAPI Backend Development
-- REST API Design
+- User Signup
+- User Login
 - JWT Authentication
-- Password Security using bcrypt
-- PostgreSQL Database Design
+- Password Hashing using bcrypt
+- Protected API Routes
+- Current User Profile
+
+
+
+## 📝 Notes Management
+
+- Create Notes
+- View Notes
+- Edit Notes
+- Delete Notes
+- Pin / Unpin Notes
+- Archive / Unarchive Notes
+- Recently Updated Notes
+
+
+
+## 🔍 Search & Pagination
+
+- Search notes by title or content
+- Server-side Pagination
+- Faster data retrieval
+
+
+
+## 🛡️ Security
+
+- JWT Authentication
+- Password Hashing using bcrypt
+- Protected API Endpoints
+- Login API Rate Limiting (SlowAPI)
+- CORS Configuration
+
+
+
+## 🗄️ Database
+
+- PostgreSQL
 - SQLAlchemy ORM
-- Docker Containerization
-- GitHub Actions CI
-- Cloud Deployment
+- Automatic Table Creation
+- User-Note Relationship Management
+
+
+
+## ⚙️ Production Features
+
+- Docker Support
+- GitHub Actions
 - Structured Logging
-- Connection Pooling
-- Database Indexing
-- Rate Limiting
-- Git and GitHub Workflows
-- API Testing using Postman
+- Environment Variables
+- Cloud Deployment
 
 
 
-Future Improvements
+# 🛠 Tech Stack
 
-- Full Text Search
-- Note Categories
-- Refresh Token Authentication
+| Layer | Technology |
+|--------|------------|
+| Frontend | React, Vite, React Router, Axios |
+| Backend | FastAPI, SQLAlchemy |
+| Database | PostgreSQL |
+| Authentication | JWT, Passlib (bcrypt) |
+| Rate Limiting | SlowAPI |
+| DevOps | Docker, GitHub Actions |
+| Deployment | Render, Vercel |
+| Version Control | Git & GitHub |
+
+
+# 📂 Project Structure
+
+
+notes-backend/
+│
+├── app/
+│   ├── routes/
+│   │   ├── auth.py
+│   │   └── notes.py
+│   │
+│   ├── database.py
+│   ├── dependencies.py
+│   ├── limiter.py
+│   ├── logger.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── security.py
+│   └── main.py
+│
+├── frontend/
+│   ├── public/
+│   │
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── NoteCard.jsx
+│   │   │   ├── NoteForm.jsx
+│   │   │   ├── Pagination.jsx
+│   │   │   └── SearchBar.jsx
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Signup.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Archived.jsx
+│   │   │   └── RecentlyUpdated.jsx
+│   │   │
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   │
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   │
+│   ├── package.json
+│   └── vite.config.js
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+│
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── README.md
+└── .gitignore
+
+
+# ⚙️ Application Workflow
+
+## 1. User Signup
+
+- User enters a username and password.
+- Password is hashed using bcrypt.
+- User information is securely stored in PostgreSQL.
+
+
+
+## 2. User Login
+
+- Username and password are verified.
+- FastAPI generates a JWT Access Token.
+- Token is returned to the frontend.
+- React stores the token in Local Storage.
+- Login endpoint is protected using API Rate Limiting to reduce brute-force login attempts.
+
+
+
+## 3. Authentication
+
+Every protected API request automatically includes:
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+using an Axios Interceptor.
+
+FastAPI verifies the JWT before allowing access to protected endpoints.
+
+
+
+## 4. Notes Management
+
+After successful authentication, users can:
+
+- Create notes
+- View notes
+- Edit notes
+- Delete notes
+- Pin or Unpin notes
+- Archive or Unarchive notes
+
+Every note belongs only to the authenticated user.
+
+
+
+## 5. Search
+
+Users can search notes using keywords.
+
+The backend filters matching notes and returns only relevant results.
+
+
+
+## 6. Pagination
+
+Notes are divided into pages on the backend to improve performance and reduce unnecessary data transfer.
+
+
+
+## 7. Recently Updated
+
+Recently modified notes are displayed separately, allowing users to quickly access their latest work.
+
+
+
+# 🔐 Security Features
+
+- JWT Authentication
+- Password Hashing using bcrypt
+- Protected API Endpoints
+- Login API Rate Limiting (SlowAPI)
+- CORS Protection
+- Environment Variables
+
+
+
+# 📡 API Endpoints
+
+## Authentication
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | /signup | Register a new user |
+| POST | /login | Authenticate user and generate JWT |
+| GET | /me | Get authenticated user profile |
+
+
+
+## Notes
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| POST | /notes | Create a new note |
+| GET | /notes | Retrieve all notes |
+| PUT | /notes/{id} | Update a note |
+| DELETE | /notes/{id} | Delete a note |
+| PATCH | /pin/{id} | Pin or unpin a note |
+| PATCH | /archive/{id} | Archive or unarchive a note |
+| GET | /archived_notes | Retrieve archived notes |
+| GET | /recently_updated | Retrieve recently updated notes |
+| GET | /search | Search notes |---
+
+# ⚙️ Environment Variables
+
+## Backend
+
+```env
+DATABASE_URL=
+SECRET_KEY=
+ALGORITHM=
+ACCESS_TOKEN_EXPIRE_MINUTES=
+```
+
+## Frontend
+
+```env
+VITE_API_URL=
+```
+
+---
+
+# 🐳 Docker
+
+The backend supports Docker deployment.
+
+```bash
+docker-compose up --build
+```
+
+---
+
+# ☁️ Deployment
+
+### Backend
+
+- Render
+
+### Frontend
+
+- Vercel
+
+### Database
+
+- PostgreSQL (Render)
+
+---
+
+# 📈 Future Improvements
+
+- Password Reset
 - Email Verification
-- Password Reset Functionality
-- Automated Testing
-- Monitoring and Metrics Dashboard
+- Rich Text Notes
+- Tags & Categories
+- Note Sharing
+- Dark Mode
+- Refresh Tokens
+- Redis Caching
+- Unit Testing
+- Integration Testing
+- User Profile Management
 
+---
 
-Author:
+# 👨‍💻 Author
 
-Pranjal Singh
+**Pranjal Singh**
 
-Computer Science and Engineering
+Computer Science & Engineering Student
 
 University of Oulu
 
-Backend project built to practice industry-level backend engineering concepts.
+GitHub: https://github.com/Onetap43
+
+---
+
+# 🤖 AI Assistance
+
+AI tools (ChatGPT) were used as a development assistant throughout this project.
+
+AI assistance was used for:
+
+- Explaining backend and frontend concepts
+- Debugging errors and fixing issues
+- Suggesting implementation approaches
+- Improving code structure and readability
+- Writing and improving project documentation
+- Reviewing deployment configurations
+- Providing development best practices
+
+All AI-generated code and suggestions were reviewed, modified, tested, and integrated by the author before being committed and deployed.
+
+---
+
+# 📂 AI-Assisted Files
+
+The following files received AI assistance during development:
+
+## Backend
+
+- app/main.py
+- app/logger.py
+
+## Frontend
+
+- src/pages/Login.jsx
+- src/pages/Signup.jsx
+## DevOps & Documentation
+
+- docker-compose.yml
+- GitHub Actions Workflow
+- README.md
+
+AI assistance included code suggestions, debugging support, documentation improvements, implementation guidance, and best practices. Final project architecture, integration, testing, deployment, verification, and maintenance were completed by the author.
+
+---
+
+# 📄 License
+
+This project was developed for educational purposes and portfolio demonstration.
