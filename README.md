@@ -1,6 +1,8 @@
+> **AI disclosure:** This README was generated with the assistance of OpenAI ChatGPT. It was reviewed, corrected, and approved by the author.
+
 # 📝 Notes App
 
-A production-ready full-stack **Notes Management Application** built using **FastAPI**, **React**, and **PostgreSQL**. The application provides secure JWT authentication, complete note management, search, pagination, pinning, archiving, API rate limiting, structured logging, Docker support, and cloud deployment.
+A deployed full-stack **Notes Management Application** built using **FastAPI**, **React**, and **PostgreSQL**. The application provides secure JWT authentication, complete note management, search, pagination, pinning, archiving, API rate limiting, structured logging, Docker support, and cloud deployment.
 
 
 
@@ -25,6 +27,15 @@ https://notes-backend-fhvg.onrender.com/docs
 The Notes App allows users to securely create and manage their personal notes.
 
 Each user has their own private notes protected using JWT Authentication. After logging in, users can create, update, delete, search, pin, and archive notes. The backend is built using FastAPI with SQLAlchemy ORM, while the frontend is developed using React and Vite. The complete application is deployed on Render and Vercel.
+
+# 📖 How to Use
+
+1. Open the deployed frontend.
+2. Create an account from the signup page.
+3. Log in using your username and password.
+4. Create, edit, delete, pin, or archive personal notes.
+5. Use the search bar and pagination to find notes.
+6. Open the Archived and Recently Updated pages from the navigation menu.
 
 
 
@@ -83,7 +94,7 @@ Each user has their own private notes protected using JWT Authentication. After 
 ## ⚙️ Production Features
 
 - Docker Support
-- GitHub Actions
+- GitHub Actions CI Pipeline
 - Structured Logging
 - Environment Variables
 - Cloud Deployment
@@ -106,14 +117,13 @@ Each user has their own private notes protected using JWT Authentication. After 
 
 # 📂 Project Structure
 
-
+```text
 notes-backend/
 │
 ├── app/
 │   ├── routes/
 │   │   ├── auth.py
 │   │   └── notes.py
-│   │
 │   ├── database.py
 │   ├── dependencies.py
 │   ├── limiter.py
@@ -125,42 +135,27 @@ notes-backend/
 │
 ├── frontend/
 │   ├── public/
-│   │
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── NoteCard.jsx
-│   │   │   ├── NoteForm.jsx
-│   │   │   ├── Pagination.jsx
-│   │   │   └── SearchBar.jsx
-│   │   │
 │   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── Signup.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── Archived.jsx
-│   │   │   └── RecentlyUpdated.jsx
-│   │   │
 │   │   ├── services/
-│   │   │   └── api.js
-│   │   │
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   └── index.css
-│   │
 │   ├── package.json
 │   └── vite.config.js
 │
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
-│
+├── postman/
 ├── Dockerfile
 ├── docker-compose.yml
 ├── requirements.txt
+├── WORKHOURS.md
 ├── README.md
 └── .gitignore
-
+```
 
 # ⚙️ Application Workflow
 
@@ -247,26 +242,40 @@ Recently modified notes are displayed separately, allowing users to quickly acce
 ## Authentication
 
 | Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | /signup | Register a new user |
-| POST | /login | Authenticate user and generate JWT |
-| GET | /me | Get authenticated user profile |
-
-
+|---|---|---|
+| POST | `/signup` | Register a new user |
+| POST | `/login` | Authenticate user and generate JWT |
+| GET | `/me` | Get authenticated user profile |
 
 ## Notes
 
 | Method | Endpoint | Description |
-|---------|----------|-------------|
-| POST | /notes | Create a new note |
-| GET | /notes | Retrieve all notes |
-| PUT | /notes/{id} | Update a note |
-| DELETE | /notes/{id} | Delete a note |
-| PATCH | /pin/{id} | Pin or unpin a note |
-| PATCH | /archive/{id} | Archive or unarchive a note |
-| GET | /archived_notes | Retrieve archived notes |
-| GET | /recently_updated | Retrieve recently updated notes |
-| GET | /search | Search notes |---
+|---|---|---|
+| POST | `/notes` | Create a note |
+| GET | `/notes` | Retrieve the authenticated user's notes with search and pagination support |
+| GET | `/notes/{note_id}` | Get a specific note |
+| DELETE | `/notes/{note_id}` | Delete a note |
+| PUT | `/update_notes/{note_id}` | Update a note |
+| PATCH | `/notes/{note_id}/pin` | Pin or unpin a note |
+| PATCH | `/notes/{note_id}/archive` | Archive or unarchive a note |
+| GET | `/archived_notes` | Get archived notes |
+| GET | `/recently_updated` | Get recently updated notes |
+
+## General
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | API home route |
+
+## Work Hours
+
+The detailed work-hours log is available directly in the repository:
+
+[View the work-hours log](./WORKHOURS.md)
+
+The claimed project total is **178.3 hours**.
+
+Supplementary planning time is documented separately in the work-hours file but is not included in the claimed total.
 
 # ⚙️ Environment Variables
 
@@ -343,7 +352,7 @@ GitHub: https://github.com/Onetap43
 
 # 🤖 AI Assistance
 
-AI tools (ChatGPT) were used as a development assistant throughout this project.
+OpenAI ChatGPT was used as a development assistant throughout this project.
 
 AI assistance was used for:
 
@@ -370,13 +379,14 @@ The following files received AI assistance during development:
 
 ## Frontend
 
-- src/pages/Login.jsx
-- src/pages/Signup.jsx
+- frontend/src/pages/Login.jsx
+- frontend/src/pages/Signup.jsx
 ## DevOps & Documentation
 
 - docker-compose.yml
-- GitHub Actions Workflow
+- .github/workflows/ci.yml
 - README.md
+
 
 AI assistance included code suggestions, debugging support, documentation improvements, implementation guidance, and best practices. Final project architecture, integration, testing, deployment, verification, and maintenance were completed by the author.
 
