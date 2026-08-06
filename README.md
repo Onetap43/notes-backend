@@ -80,12 +80,12 @@ Each user has their own private notes protected using JWT Authentication. After 
 - Login API Rate Limiting (SlowAPI)
 - CORS Configuration
 
-
-
 ## 🗄️ Database
 
 - PostgreSQL
 - SQLAlchemy ORM
+- SQLAlchemy Connection Pooling
+- Pool health checks using `pool_pre_ping`
 - Automatic Table Creation
 - User-Note Relationship Management
 
@@ -99,7 +99,19 @@ Each user has their own private notes protected using JWT Authentication. After 
 - Environment Variables
 - Cloud Deployment
 
+# 🔄 Database Connection Pooling
 
+The backend uses SQLAlchemy connection pooling to reuse existing database
+connections instead of creating a new connection for every request.
+
+The configured pool uses:
+
+- `pool_size=5` for persistent database connections
+- `max_overflow=10` for temporary additional connections during higher load
+- `pool_pre_ping=True` to verify connections before reuse and replace stale connections
+
+This improves database efficiency and helps maintain reliable connections in
+the deployed PostgreSQL environment.
 
 # 🛠 Tech Stack
 
