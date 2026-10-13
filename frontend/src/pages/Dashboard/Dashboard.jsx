@@ -10,6 +10,7 @@ function Dashboard() {
 
   const [user, setUser] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [hasNext, setHasNext] = useState(false);
 
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -52,7 +53,15 @@ function Dashboard() {
         },
       });
 
-      setNotes(response.data);
+      const fetchedNotes = response.data.items;
+
+      if (fetchedNotes.length === 0 && page > 1) {
+        setPage((currentPage) => currentPage - 1);
+        return;
+      }
+
+      setNotes(fetchedNotes);
+      setHasNext(response.data.has_next);
     } catch (error) {
       console.error(error);
     }
@@ -92,9 +101,7 @@ function Dashboard() {
 
       <hr />
 
-      <CreateNote
-        onNoteCreated={fetchNotes}
-      />
+      <CreateNote onNoteCreated={fetchNotes} />
 
       <h2>My Notes</h2>
 
@@ -128,7 +135,7 @@ function Dashboard() {
       <div style={{ marginTop: "25px" }}>
         <button
           disabled={page === 1}
-          onClick={() => setPage(page - 1)}
+          onClick={() => setPage((currentPage) => currentPage - 1)}
         >
           Previous
         </button>
@@ -138,7 +145,8 @@ function Dashboard() {
         </span>
 
         <button
-          onClick={() => setPage(page + 1)}
+          disabled={!hasNext}
+          onClick={() => setPage((currentPage) => currentPage + 1)}
         >
           Next
         </button>

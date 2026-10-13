@@ -407,3 +407,14 @@ AI assistance included code suggestions, debugging support, documentation improv
 # 📄 License
 
 This project was developed for educational purposes and portfolio demonstration.
+
+## 10 ECTS expansion work
+
+### 13 October 2026 — 1 h 45 min
+
+- Fixed dashboard pagination and corrected the `has_next` logic.
+- Disabled the Next button correctly when there are no more pages.
+- Added navigation from Archived Notes back to the Dashboard.
+- Tested the frontend and backend locally after the fixes.
+
+Expansion work total: 1 h 45 min
