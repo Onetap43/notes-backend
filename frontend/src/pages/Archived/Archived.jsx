@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
@@ -9,6 +9,15 @@ function Archived() {
 
   const [notes, setNotes] = useState([]);
 
+  const fetchArchivedNotes = useCallback(async () => {
+    try {
+      const response = await api.get("/archived_notes");
+      setNotes(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
@@ -18,16 +27,7 @@ function Archived() {
     }
 
     fetchArchivedNotes();
-  }, [navigate]);
-
-  const fetchArchivedNotes = async () => {
-    try {
-      const response = await api.get("/archived_notes");
-      setNotes(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  }, [navigate, fetchArchivedNotes]);
 
   return (
     <div

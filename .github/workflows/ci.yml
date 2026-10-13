@@ -1,31 +1,63 @@
-name: CI
+name: Notes CI/CD
 
 on:
   push:
     branches:
       - main
 
-jobs:
-  test:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize]
 
+jobs:
+  checks:
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Install Dependencies
-        run: |
-          pip install -r requirements.txt
+      - name: Install backend dependencies
+        run: pip install -r requirements.txt
 
-      - name: Check Imports
+      - name: Check backend Python files
+        run: python -m compileall app
+
+      - name: Check backend dependencies
         run: |
           python -c "import fastapi"
           python -c "import sqlalchemy"
           python -c "import jose"
+          python -c "import slowapi"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+  deploy:
+    needs: [checks]
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+
+    steps:
+      - name: Deploy backend to Render
+        run: curl "${{ secrets.RENDER_DEPLOY_HOOK }}"

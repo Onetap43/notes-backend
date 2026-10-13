@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 import CreateNote from "../../components/CreateNote";
 import NoteCard from "../../components/NoteCard";
+
+const LIMIT = 5;
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -11,28 +13,10 @@ function Dashboard() {
   const [user, setUser] = useState(null);
   const [notes, setNotes] = useState([]);
   const [hasNext, setHasNext] = useState(false);
-
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  const limit = 5;
-
-  useEffect(() => {
-    const token = localStorage.getItem("access_token");
-
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    fetchUser();
-  }, [navigate]);
-
-  useEffect(() => {
-    fetchNotes();
-  }, [page, search]);
-
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     try {
       const response = await api.get("/me");
       setUser(response.data);
@@ -41,15 +25,15 @@ function Dashboard() {
       localStorage.removeItem("access_token");
       navigate("/login");
     }
-  };
+  }, [navigate]);
 
-  const fetchNotes = async () => {
+  const fetchNotes = useCallback(async () => {
     try {
       const response = await api.get("/notes", {
         params: {
           search,
           page,
-          limit,
+          limit: LIMIT,
         },
       });
 
@@ -65,7 +49,22 @@ function Dashboard() {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [page, search]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    fetchUser();
+  }, [navigate, fetchUser]);
+
+  useEffect(() => {
+    fetchNotes();
+  }, [fetchNotes]);
 
   const logout = () => {
     localStorage.removeItem("access_token");
@@ -79,7 +78,6 @@ function Dashboard() {
   return (
     <div style={{ padding: "40px" }}>
       <h1>Dashboard</h1>
-
       <h2>Welcome, {user.username}</h2>
 
       <p>User ID: {user.user_id}</p>
