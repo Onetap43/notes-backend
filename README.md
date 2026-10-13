@@ -247,6 +247,10 @@ Recently modified notes are displayed separately, allowing users to quickly acce
 - CORS Protection
 - Environment Variables
 
+## CI/CD
+
+The project uses GitHub Actions for automated backend checks, frontend linting and builds, and deployment to Render.
+
 
 
 # 📡 API Endpoints
