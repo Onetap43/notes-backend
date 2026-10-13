@@ -48,3 +48,8 @@ def home():
         "message": "Notes Backend API Running",
         "docs": "/docs",
     }
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}

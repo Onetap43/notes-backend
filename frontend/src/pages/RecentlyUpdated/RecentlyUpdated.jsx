@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
@@ -9,6 +9,15 @@ function RecentlyUpdated() {
 
   const [notes, setNotes] = useState([]);
 
+  const fetchRecentlyUpdated = useCallback(async () => {
+    try {
+      const response = await api.get("/recently_updated");
+      setNotes(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
@@ -18,16 +27,7 @@ function RecentlyUpdated() {
     }
 
     fetchRecentlyUpdated();
-  }, [navigate]);
-
-  const fetchRecentlyUpdated = async () => {
-    try {
-      const response = await api.get("/recently_updated");
-      setNotes(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  }, [navigate, fetchRecentlyUpdated]);
 
   return (
     <div style={{ padding: "40px" }}>
@@ -41,7 +41,8 @@ function RecentlyUpdated() {
 
       {notes.length === 0 ? (
         <p>No recently updated notes found.</p>
-      ) : (notes.map((note) => (
+      ) : (
+        notes.map((note) => (
           <NoteCard
             key={note.note_id}
             note={note}
