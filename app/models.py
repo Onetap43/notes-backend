@@ -36,6 +36,9 @@ class Notes(DatabaseBase):
     checklist_items = relationship(
         "ChecklistItem", back_populates="note", cascade="all, delete-orphan"
     )
+    versions = relationship(
+        "NoteVersion", back_populates="note", cascade="all, delete-orphan"
+    )
 
 
 class Tag(DatabaseBase):
@@ -57,3 +60,14 @@ class ChecklistItem(DatabaseBase):
     completed = Column(Boolean, default=False, nullable=False)
     position = Column(Integer, default=0, nullable=False)
     note = relationship("Notes", back_populates="checklist_items")
+
+
+class NoteVersion(DatabaseBase):
+    __tablename__ = "note_versions"
+
+    version_id = Column(Integer, primary_key=True, index=True)
+    note_id = Column(Integer, ForeignKey("notes.note_id", ondelete="CASCADE"), nullable=False, index=True)
+    title = Column(String, nullable=False)
+    content = Column(String, nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    note = relationship("Notes", back_populates="versions")

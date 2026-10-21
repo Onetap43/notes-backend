@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import api from "../services/api";
 import Checklist from "./Checklist";
+import VersionHistory from "./VersionHistory";
 
 function NoteCard({ note, fetchNotes, allTags = null, onTagChanged }) {
   const [editing, setEditing] = useState(false);
@@ -10,6 +11,12 @@ function NoteCard({ note, fetchNotes, allTags = null, onTagChanged }) {
   const [tagToAdd, setTagToAdd] = useState("");
   const [tagBusy, setTagBusy] = useState(false);
   const [tagError, setTagError] = useState("");
+
+  // Keep edit form synced after a restored version refreshes this note.
+  useEffect(() => {
+    setTitle(note.title);
+    setContent(note.content);
+  }, [note.title, note.content]);
 
   const fetchNoteTags = useCallback(async () => {
     const response = await api.get(`/notes/${note.note_id}/tags`);
@@ -169,6 +176,7 @@ function NoteCard({ note, fetchNotes, allTags = null, onTagChanged }) {
       )}
 
       <Checklist noteId={note.note_id} />
+      <VersionHistory noteId={note.note_id} onRestored={fetchNotes} />
 
       <button onClick={() => setEditing(true)} style={{ marginRight: "10px" }}>Edit</button>
       <button onClick={deleteNote} style={{ marginRight: "10px" }}>Delete</button>
