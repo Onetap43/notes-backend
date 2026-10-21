@@ -8,7 +8,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from app.database import database_engine, DatabaseBase
 from app.limiter import limiter
 from app import models
-from app.routes import auth, notes
+from app.routes import auth, notes, tags
 
 app = FastAPI()
 
@@ -40,14 +40,12 @@ DatabaseBase.metadata.create_all(bind=database_engine)
 
 app.include_router(auth.router)
 app.include_router(notes.router)
+app.include_router(tags.router)
 
 
 @app.get("/")
 def home():
-    return {
-        "message": "Notes Backend API Running",
-        "docs": "/docs",
-    }
+    return {"message": "Notes Backend API Running", "docs": "/docs"}
 
 
 @app.get("/health")
