@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import api from "../services/api";
+import Checklist from "./Checklist";
 
 function NoteCard({ note, fetchNotes, allTags = null, onTagChanged }) {
   const [editing, setEditing] = useState(false);
@@ -166,6 +167,8 @@ function NoteCard({ note, fetchNotes, allTags = null, onTagChanged }) {
           {tagError && <p role="alert" style={{ color: "#b91c1c" }}>{tagError}</p>}
         </div>
       )}
+
+      <Checklist noteId={note.note_id} />
 
       <button onClick={() => setEditing(true)} style={{ marginRight: "10px" }}>Edit</button>
       <button onClick={deleteNote} style={{ marginRight: "10px" }}>Delete</button>
