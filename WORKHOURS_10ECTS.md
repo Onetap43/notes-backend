@@ -20,3 +20,16 @@
 ## Total expansion work
 
 3 h
+
+## 21 October 2026 — 2.5h
+
+- Added automated backend API tests and fixed test environment issues.
+- Implemented Tags and Categories with filtering and user ownership.
+- Added note checklists with task completion and progress tracking.
+- Implemented Note Version History and restore functionality.
+- Ran 18 backend tests and verified frontend lint, build, and features in the browser.
+- Committed and pushed the expansion features to GitHub.
+
+## Updated Total expansion work
+
+5.5 h
