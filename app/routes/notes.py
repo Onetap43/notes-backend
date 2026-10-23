@@ -5,7 +5,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.database import get_database
-from app.models import Notes, User
+from app.models import Notes, User, NoteVersion
 from app.routes.auth import get_current_user
 from app.schemas import NoteCreate, NoteUpdate
 
@@ -123,9 +123,17 @@ def update_notes(
             detail="Note not found",
         )
 
-    note.title = updated_data.title
-    note.content = updated_data.content
-    note.updated_at = datetime.now(timezone.utc)
+    # Save the previous state only when title or content actually changes.
+    # The snapshot and new note content are committed in one transaction.
+    if note.title != updated_data.title or note.content != updated_data.content:
+        database_session.add(NoteVersion(
+            note_id=note.note_id,
+            title=note.title,
+            content=note.content,
+        ))
+        note.title = updated_data.title
+        note.content = updated_data.content
+        note.updated_at = datetime.now(timezone.utc)
 
     database_session.commit()
     database_session.refresh(note)
