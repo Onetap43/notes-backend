@@ -1,18 +1,18 @@
-> **AI disclosure:** This README was generated with the assistance of OpenAI ChatGPT. It was reviewed, corrected, and approved by the author.
+> **AI disclosure:** OpenAI ChatGPT assisted with code generation, implementation, debugging, automated tests, and documentation. See [AI Assistance](#-ai-assistance) for details. The author ran automated and manual tests and is responsible for project verification and submission.
 
 # 📝 Notes App
 
-A deployed full-stack **Notes Management Application** built using **FastAPI**, **React**, and **PostgreSQL**. The application provides secure JWT authentication, complete note management, search, pagination, pinning, archiving, API rate limiting, structured logging, Docker support, and cloud deployment.
+A full-stack **Notes Management Application** built using **FastAPI**, **React**, and **PostgreSQL**. The base application is deployed, while the tags, checklists, version history, and automated-test expansion is being prepared for production. The code includes JWT authentication, note management, search, pagination, pinning, archiving, tags, checklists, version history, API rate limiting, structured logging, Docker support, and cloud deployment.
 
 
 
 # 🚀 A Live Demo
 
-### Frontend
+### Frontend (existing production deployment; expansion not yet verified live)
 
 https://notes-backend-project.vercel.app
 
-### Backend API
+### Backend API (existing production deployment)
 
 https://notes-backend-fhvg.onrender.com
 
@@ -26,7 +26,7 @@ https://notes-backend-fhvg.onrender.com/docs
 
 The Notes App allows users to securely create and manage their personal notes.
 
-Each user has their own private notes protected using JWT Authentication. After logging in, users can create, update, delete, search, pin, and archive notes. The backend is built using FastAPI with SQLAlchemy ORM, while the frontend is developed using React and Vite. The complete application is deployed on Render and Vercel.
+Each user has their own private notes protected using JWT Authentication. After logging in, users can create, update, delete, search, pin, archive, tag, and organize notes with checklists and version history. The backend is built using FastAPI with SQLAlchemy ORM, while the frontend is developed using React and Vite. The existing application is deployed on Render and Vercel. At the time of the expansion PR, the new features have been tested locally but are not yet verified in production.
 
 # 📖 How to Use
 
@@ -35,7 +35,10 @@ Each user has their own private notes protected using JWT Authentication. After 
 3. Log in using your username and password.
 4. Create, edit, delete, pin, or archive personal notes.
 5. Use the search bar and pagination to find notes.
-6. Open the Archived and Recently Updated pages from the navigation menu.
+6. Create tags, assign tags to notes, and filter your dashboard by tag.
+7. Open a note checklist to add, edit, complete, and remove tasks.
+8. Edit a note and use Version History to inspect and restore an earlier title/content.
+9. Open the Archived and Recently Updated pages from the navigation menu.
 
 
 
@@ -64,6 +67,26 @@ Each user has their own private notes protected using JWT Authentication. After 
 
 
 
+## 🏷️ Tags & Categories
+
+- User-owned tags: create, view, and delete tags
+- Assign multiple tags to a note, and remove assignments
+- Filter dashboard notes using a tag
+- Restrict tag and note access to the authenticated owner
+
+## ✅ Note Checklists
+
+- Add, edit, complete/uncomplete, and delete checklist items per note
+- Track completion count and progress percentage
+- Persist checklist items in the database
+
+## 🕓 Note Version History
+
+- Save the previous title and content when a note is changed
+- List previous versions with timestamps
+- Restore an earlier version while preserving the replaced current state
+- Enforce ownership on version-history endpoints
+
 ## 🔍 Search & Pagination
 
 - Search notes by title or content
@@ -86,15 +109,19 @@ Each user has their own private notes protected using JWT Authentication. After 
 - SQLAlchemy ORM
 - SQLAlchemy Connection Pooling
 - Pool health checks using `pool_pre_ping`
-- Automatic Table Creation
+- Automatic table creation via SQLAlchemy `create_all()` on backend startup
 - User-Note Relationship Management
+- New tables: `tags`, `note_tags`, `checklist_items`, `note_versions`
+- Existing `users` and `notes` table definitions remain unchanged by this expansion
+
+**Deployment note:** `create_all()` creates missing tables but does not upgrade existing columns. Production verification and a database backup are required before accepting this release as fully deployed.
 
 
 
 ## ⚙️ Production Features
 
 - Docker Support
-- GitHub Actions CI Pipeline
+- GitHub Actions CI Pipeline (backend `pytest`, Python checks, frontend lint/build)
 - Structured Logging
 - Environment Variables
 - Cloud Deployment
@@ -135,14 +162,15 @@ notes-backend/
 ├── app/
 │   ├── routes/
 │   │   ├── auth.py
-│   │   └── notes.py
+│   │   ├── notes.py
+│   │   ├── tags.py
+│   │   ├── checklists.py
+│   │   └── history.py
 │   ├── database.py
-│   ├── dependencies.py
 │   ├── limiter.py
 │   ├── logger.py
 │   ├── models.py
 │   ├── schemas.py
-│   ├── security.py
 │   └── main.py
 │
 ├── frontend/
@@ -165,6 +193,13 @@ notes-backend/
 ├── docker-compose.yml
 ├── requirements.txt
 ├── WORKHOURS.md
+├── WORKHOURS_10ECTS.md
+├── tests/
+│   ├── conftest.py
+│   ├── test_notes_api.py
+│   ├── test_tags_api.py
+│   ├── test_checklists_api.py
+│   └── test_history_api.py
 ├── README.md
 └── .gitignore
 ```
@@ -249,7 +284,19 @@ Recently modified notes are displayed separately, allowing users to quickly acce
 
 ## CI/CD
 
-The project uses GitHub Actions for automated backend checks, frontend linting and builds, and deployment to Render.
+The project uses GitHub Actions for backend validation, **18 automated API tests**, frontend ESLint, Vite production builds, and a Render deployment hook on push to `main`.
+
+Run checks locally from the repository root:
+
+```bash
+python -m pytest tests -v
+cd frontend
+npm ci
+npm run lint
+npm run build
+```
+
+At the time of the expansion PR, **18/18 backend tests passed locally**, the frontend lint/build passed, and the new features were manually tested locally. Production deployment must be verified separately. Tests include authentication, note CRUD/ownership/pagination, tags, checklists, and history/restore.
 
 
 
@@ -277,11 +324,40 @@ The project uses GitHub Actions for automated backend checks, frontend linting a
 | GET | `/archived_notes` | Get archived notes |
 | GET | `/recently_updated` | Get recently updated notes |
 
+## Tags
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/tags` | Create a tag |
+| GET | `/tags` | List own tags |
+| DELETE | `/tags/{tag_id}` | Delete a tag |
+| PUT | `/notes/{note_id}/tags/{tag_id}` | Assign tag to a note |
+| DELETE | `/notes/{note_id}/tags/{tag_id}` | Remove tag assignment |
+| GET | `/notes/{note_id}/tags` | List note tags |
+| GET | `/tags/{tag_id}/notes` | List notes with a tag |
+
+## Checklists
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/notes/{note_id}/checklist` | List items and progress |
+| POST | `/notes/{note_id}/checklist` | Add item |
+| PATCH | `/notes/{note_id}/checklist/{item_id}` | Update item or completion |
+| DELETE | `/notes/{note_id}/checklist/{item_id}` | Delete item |
+
+## Version History
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/notes/{note_id}/history` | List previous versions |
+| POST | `/notes/{note_id}/history/{version_id}/restore` | Restore previous version |
+
 ## General
 
 | Method | Endpoint | Description |
 |---|---|---|
 | GET | `/` | API home route |
+| GET | `/health` | Health check |
 
 ## Work Hours
 
@@ -289,9 +365,9 @@ The detailed work-hours log is available directly in the repository:
 
 [View the work-hours log](./WORKHOURS.md)
 
-The claimed project total is **178.3 hours**.
+The original project work-hours file records **178.3 hours**. The separate [10 ECTS expansion log](./WORKHOURS_10ECTS.md) records **5.5 additional hours as of 21 October 2026**, for **183.8 total documented hours** at that point. Only actual work time should be added to either record; these hours do not guarantee any particular ECTS grade.
 
-Supplementary planning time is documented separately in the work-hours file but is not included in the claimed total.
+Supplementary planning time is documented separately in the original work-hours file and is not included in the claimed original total.
 
 # ⚙️ Environment Variables
 
@@ -343,13 +419,12 @@ docker-compose up --build
 - Password Reset
 - Email Verification
 - Rich Text Notes
-- Tags & Categories
 - Note Sharing
 - Dark Mode
 - Refresh Tokens
 - Redis Caching
-- Unit Testing
-- Integration Testing
+- Additional frontend component tests
+- Expanded integration and deployment tests
 - User Profile Management
 
 ---
@@ -368,43 +443,16 @@ GitHub: https://github.com/Onetap43
 
 # 🤖 AI Assistance
 
-OpenAI ChatGPT was used as a development assistant throughout this project.
+OpenAI ChatGPT was used substantially as a development assistant. Assistance included explaining concepts, generating or revising code and tests, providing multi-file feature patches, debugging, CI configuration, API design, and documentation. The author applied the changes, ran automated and manual tests, verified behavior locally, and maintained the repository.
 
-AI assistance was used for:
+In particular, the following expansion areas were implemented with significant AI-assisted code generation and review:
 
-- Explaining backend and frontend concepts
-- Debugging errors and fixing issues
-- Suggesting implementation approaches
-- Improving code structure and readability
-- Writing and improving project documentation
-- Reviewing deployment configurations
-- Providing development best practices
+- **Backend:** `app/models.py`, `app/main.py`, `app/routes/tags.py`, `app/routes/checklists.py`, `app/routes/history.py`, and changes to `app/routes/notes.py`
+- **Frontend:** `frontend/src/components/TagsPanel.jsx`, `Checklist.jsx`, `VersionHistory.jsx`, `NoteCard.jsx`, and changes to `frontend/src/pages/Dashboard/Dashboard.jsx`
+- **Tests:** `tests/conftest.py`, `tests/test_notes_api.py`, `tests/test_tags_api.py`, `tests/test_checklists_api.py`, and `tests/test_history_api.py`
+- **DevOps/documentation:** `.github/workflows/ci.yml`, `README.md`, and troubleshooting guidance
 
-All AI-generated code and suggestions were reviewed, modified, tested, and integrated by the author before being committed and deployed.
-
----
-
-# 📂 AI-Assisted Files
-
-The following files received AI assistance during development:
-
-## Backend
-
-- app/main.py
-- app/logger.py
-
-## Frontend
-
-- frontend/src/pages/Login.jsx
-- frontend/src/pages/Signup.jsx
-## DevOps & Documentation
-
-- docker-compose.yml
-- .github/workflows/ci.yml
-- README.md
-
-
-AI assistance included code suggestions, debugging support, documentation improvements, implementation guidance, and best practices. Final project architecture, integration, testing, deployment, verification, and maintenance were completed by the author.
+The original application also received AI assistance for authentication, backend/frontend programming, deployment configuration, and debugging. The extent of assistance is disclosed here so that the reviewer can assess the work transparently.
 
 ---
 
