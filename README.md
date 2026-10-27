@@ -365,7 +365,7 @@ The detailed work-hours log is available directly in the repository:
 
 [View the work-hours log](./WORKHOURS.md)
 
-The original project work-hours file records **178.3 hours**. The separate [10 ECTS expansion log](./WORKHOURS_10ECTS.md) records **5.5 additional hours as of 21 October 2026**, for **183.8 total documented hours** at that point. Only actual work time should be added to either record; these hours do not guarantee any particular ECTS grade.
+The original project work-hours file records **178.3 hours**. The separate [10 ECTS expansion log](./WORKHOURS_10ECTS.md) records **5.5 additional hours as of 21 October 2026**, for **183.8 total documented hours** at that point.
 
 Supplementary planning time is documented separately in the original work-hours file and is not included in the claimed original total.
 
